@@ -12,13 +12,28 @@ Harmanjeet Singh (991439186)
 /* the buffer */
 typedef int buffer_item;
 #define BUFFER_SIZE 5
+int buffer_index;
 buffer_item buffer[BUFFER_SIZE];
 
-int insert item(buffer item item) {
+int insert item(buffer_item item) {
+	if (buffer_index < BUFFER_SIZE){
+		buffer[buffer_index++] = item;
+	}else{
+		printf("Buffer Overflow")
+		return -1;
+	}
+	return 0;
 /* insert item into bufferreturn 0 if successful, otherwisereturn -1 indicating an error condition */
 }
 
 int remove item(buffer item *item) {
+	if (buffer_index > 0){
+		return buffer[--buffer_index];
+	}else{
+		printf("Buffer underflow")
+		return -1;
+	}
+	return 0;
 /* remove an object from bufferplacing it in itemreturn 0 if successful, otherwisereturn -1 indicating an error condition */
 }
 
@@ -53,6 +68,7 @@ void *consumer(void *param) {
 int main(int argc, char *argv[]) {
 
 	/* 1. Get command line arguments  argv[1],argv[2],argv[3] */
+	
 	/* 2. Initialize buffer */
 	/* 3. Create producer thread(s) */
 	/* 4. Create consumer thread(s) */
