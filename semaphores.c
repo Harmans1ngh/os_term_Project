@@ -25,12 +25,6 @@ void * consumer(void * param); // the consumer thread
 
 void initialize() {
 
-  buffer_index = 0;
-  pthread_mutex_init( & bufferMutex, NULL); // create the mutex 
-  sem_init( & full, 0, 0); // full semaphore and initalized to 0
-  sem_init( & empty, 0, BUFFER_SIZE); // empty semaphore and initalized to buffer_size
-  pthread_attr_init( & attribute);
-
 }
 
 /* insert item into bufferreturn 0 if successful, otherwisereturn -1 indicating an error condition */
@@ -122,7 +116,11 @@ int main(int argc, char * argv[]) {
 
   /* 2. Initialize buffer */
 
-  initialize();
+  buffer_index = 0;
+  pthread_mutex_init( & bufferMutex, NULL); // create the mutex 
+  sem_init(&full,0,0); // full semaphore and initalized to 0
+  sem_init( & empty, 0, BUFFER_SIZE); // empty semaphore and initalized to buffer_size
+  pthread_attr_init( & attribute);
 
   /* 3. Create producer thread(s) */
 
@@ -142,7 +140,7 @@ int main(int argc, char * argv[]) {
 
   /* 6. Exit */
 
-  printf("Exit the program\n");
+  printf("Thank you Sir/Maam for using this wonderfully exquisite program created by Harmanjeet(991439186) and Bikramjit(991330905).\nThank you and have yourself a wonderfull day! =D\n");
   exit(0);
 
 }
