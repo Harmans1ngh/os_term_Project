@@ -40,7 +40,7 @@ int insert_item(buffer_item item) {
     buffer_index++;
     return 0;
   } else {
-    printf("Buffer Overflow");
+    printf("Buffer Overflow \n");
     return -1;
   }
 }
@@ -52,7 +52,7 @@ int remove_item(buffer_item * item) {
     buffer_index--;
     return 0;
   } else {
-    printf("Buffer underflow");
+    printf("Buffer underflow \n");
     return -1;
   }
 }
@@ -73,7 +73,7 @@ void * producer(void * param) {
     pthread_mutex_lock( & bufferMutex);
 
     if (insert_item(item)) {
-      fprintf(stderr, "report error condition");
+      fprintf(stderr, "report error condition \n");
     } else {
       printf("producer produced %d\n", item);
     }
@@ -97,7 +97,7 @@ void * consumer(void * param) {
     pthread_mutex_lock( & bufferMutex);
 
     if (remove_item( & item)) {
-      fprintf(stderr, "report error condition");
+      fprintf(stderr, "report error condition \n");
     } else {
       printf("consumer consumed %d\n", item);
     }
