@@ -4,31 +4,28 @@
 #include <semaphore.h> 
 #include <unistd.h>
 
- /* the buffer */
- typedef int buffer_item;
-int buffer_index;
 
-#define RAND_DIVISOR 100000000
-# define BUFFER_SIZE 5
-# define true 1
+#define BUFFER_SIZE 5
+#define true 1
+
+ /* the buffer */
+typedef int buffer_item;
+int buffer_index;
 buffer_item buffer[BUFFER_SIZE];
 
+/* defining semaphores and pthread */
 pthread_mutex_t bufferMutex;
-sem_t full;
-sem_t empty;
-
+sem_t fullBuff;
+sem_t emptyBuff;
 pthread_t threadID; //Thread ID
 pthread_attr_t attribute; //Set of thread attributes
 
 void * producer(void * param); // the producer thread 
 void * consumer(void * param); // the consumer thread 
 
-void initialize() {
-
-}
-
 /* insert item into bufferreturn 0 if successful, otherwisereturn -1 indicating an error condition */
 int insert_item(buffer_item item) {
+
   if (buffer_index < BUFFER_SIZE) {
     buffer[buffer_index] = item;
     buffer_index++;
@@ -37,33 +34,33 @@ int insert_item(buffer_item item) {
     printf("Buffer Overflow \n");
     return -1;
   }
+
 }
 
 /* remove an object from bufferplacing it in itemreturn 0 if successful, otherwisereturn -1 indicating an error condition */
 int remove_item(buffer_item * item) {
+
   if (buffer_index > 0) {
-    * item = buffer[(buffer_index - 1)];
+  	* item = buffer[(buffer_index - 1)];
     buffer_index--;
     return 0;
   } else {
     printf("Buffer underflow \n");
     return -1;
   }
+
 }
 
 void * producer(void * param) {
 
   buffer_item item;
-
   while (true) {
     /* sleep for a random period of time */
-    // sleep(rand()); 
-    int rNum = rand() / RAND_DIVISOR;
-    sleep(rNum);
+    sleep(rand() % 10);
     /* generate a random number */
     item = rand();
 
-    sem_wait( & empty);
+    sem_wait( & emptyBuff);
     pthread_mutex_lock( & bufferMutex);
 
     if (insert_item(item)) {
@@ -72,7 +69,7 @@ void * producer(void * param) {
       printf("producer produced %d\n", item);
     }
     pthread_mutex_unlock( & bufferMutex);
-    sem_post( & full);
+    sem_post( & fullBuff);
   }
 }
 
@@ -82,12 +79,9 @@ void * consumer(void * param) {
 
   while (true) {
     /* sleep for a random period of time */
-    //sleep(rand()); 
+    sleep(rand() % 10);
 
-    int rNum = rand() / RAND_DIVISOR;
-    sleep(rNum);
-
-    sem_wait( & full);
+    sem_wait( & fullBuff);
     pthread_mutex_lock( & bufferMutex);
 
     if (remove_item( & item)) {
@@ -97,7 +91,7 @@ void * consumer(void * param) {
     }
 
     pthread_mutex_unlock( & bufferMutex);
-    sem_post( & empty);
+    sem_post( & emptyBuff);
   }
 }
 
@@ -118,8 +112,8 @@ int main(int argc, char * argv[]) {
 
   buffer_index = 0;
   pthread_mutex_init( & bufferMutex, NULL); // create the mutex 
-  sem_init(&full,0,0); // full semaphore and initalized to 0
-  sem_init( & empty, 0, BUFFER_SIZE); // empty semaphore and initalized to buffer_size
+  sem_init(&fullBuff,0,0); // full semaphore and initalized to 0
+  sem_init( & emptyBuff, 0, BUFFER_SIZE); // empty semaphore and initalized to buffer_size
   pthread_attr_init( & attribute);
 
   /* 3. Create producer thread(s) */
