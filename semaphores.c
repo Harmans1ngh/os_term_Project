@@ -1,3 +1,9 @@
+/*
+Final Project- Semaphores
+Bikramjit Garcha (991330905)
+Harmanjeet Singh (991439186)
+*/
+
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <pthread.h> 
@@ -54,6 +60,7 @@ int remove_item(buffer_item * item) {
 void * producer(void * param) {
 
   buffer_item item;
+  
   while (true) {
     /* sleep for a random period of time */
     sleep(rand() % 10);
